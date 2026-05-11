@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
 import { Trash2, ShoppingCart } from "lucide-react";
+import { SwipeToDelete } from "@/components/SwipeToDelete";
 
 export const Route = createFileRoute("/cart")({ component: CartPage });
 
@@ -53,20 +54,23 @@ function CartPage() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           <div className="space-y-3">
+            <p className="text-xs text-muted-foreground md:hidden">Tip: swipe a card left to delete.</p>
             {items.map((r) => (
-              <div key={r.id} className="flex gap-3 rounded-xl border bg-card p-3">
-                <Link to="/listing/$id" params={{ id: r.listing!.id }} className="h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
-                  {r.listing!.images[0] && <img src={r.listing!.images[0]} alt="" className="h-full w-full object-cover" />}
-                </Link>
-                <div className="flex flex-1 flex-col">
-                  <Link to="/listing/$id" params={{ id: r.listing!.id }} className="line-clamp-1 font-medium hover:underline">
-                    {r.listing!.title}
+              <SwipeToDelete key={r.id} onDelete={() => remove(r.id)} className="border">
+                <div className="flex gap-3 p-3">
+                  <Link to="/listing/$id" params={{ id: r.listing!.id }} className="h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
+                    {r.listing!.images[0] && <img src={r.listing!.images[0]} alt="" className="h-full w-full object-cover" />}
                   </Link>
-                  <div className="text-xs text-muted-foreground">{r.listing!.code} · qty {r.quantity}</div>
-                  <div className="mt-auto font-semibold">{formatPrice(Number(r.listing!.price) * r.quantity)}</div>
+                  <div className="flex flex-1 flex-col">
+                    <Link to="/listing/$id" params={{ id: r.listing!.id }} className="line-clamp-1 font-medium hover:underline">
+                      {r.listing!.title}
+                    </Link>
+                    <div className="text-xs text-muted-foreground">{r.listing!.code} · qty {r.quantity}</div>
+                    <div className="mt-auto font-semibold">{formatPrice(Number(r.listing!.price) * r.quantity)}</div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => remove(r.id)} className="hidden md:inline-flex"><Trash2 className="h-4 w-4" /></Button>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4" /></Button>
-              </div>
+              </SwipeToDelete>
             ))}
           </div>
           <aside className="h-fit space-y-3 rounded-xl border bg-card p-4">
