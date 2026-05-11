@@ -2,13 +2,13 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Home, Search, Heart, ShoppingCart, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const items = [
+const items: { to: string; label: string; icon: typeof Home; exact?: boolean }[] = [
   { to: "/", label: "Home", icon: Home, exact: true },
   { to: "/search", label: "Search", icon: Search },
   { to: "/wishlist", label: "Wishlist", icon: Heart },
   { to: "/cart", label: "Cart", icon: ShoppingCart },
   { to: "/profile", label: "Profile", icon: User },
-] as const;
+];
 
 export function BottomNav() {
   const { pathname } = useLocation();
@@ -21,7 +21,7 @@ export function BottomNav() {
           return (
             <li key={it.to}>
               <Link
-                to={it.to}
+                to={it.to as any}
                 className={cn(
                   "flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium",
                   active ? "text-accent" : "text-muted-foreground",
