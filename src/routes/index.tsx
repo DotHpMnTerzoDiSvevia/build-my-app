@@ -39,8 +39,10 @@ function Index() {
   return (
     <AppLayout>
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-primary/5 via-transparent to-accent/30 p-8 sm:p-14">
-        <div className="max-w-2xl">
+      <section className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-primary/10 via-background to-accent/20 p-8 sm:p-14">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
+        <div className="relative max-w-2xl">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border bg-background/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3 w-3" /> One marketplace, new & pre-loved
           </div>
@@ -49,18 +51,38 @@ function Index() {
           </h1>
           <p className="mt-4 text-muted-foreground sm:text-lg">
             Browse a unified catalog mixing brand-new products and classified ads from real people.
-            Post an ad in minutes, chat with sellers, and check out in one place.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link to="/browse">
-                <ShoppingBag className="mr-2 h-4 w-4" /> Browse catalog
-              </Link>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const t = q.trim();
+              navigate({ to: t ? "/search" : "/browse", search: t ? { q: t } : {} });
+            }}
+            className="relative mt-6"
+          >
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search anything — bikes, sneakers, PROD-12345…"
+              className="h-14 rounded-2xl pl-12 pr-28 text-base shadow-sm"
+            />
+            <Button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl">
+              Search
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to="/sell">
-                <Tag className="mr-2 h-4 w-4" /> Sell something
-              </Link>
+          </form>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild variant="ghost" size="sm" className="rounded-full">
+              <Link to="/browse">All listings</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="rounded-full">
+              <Link to="/browse" search={{ type: "new" }}>New products</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="rounded-full">
+              <Link to="/browse" search={{ type: "classified" }}>Classified ads</Link>
+            </Button>
+            <Button asChild size="sm" variant="outline" className="rounded-full">
+              <Link to="/sell"><Tag className="mr-1.5 h-3.5 w-3.5" />Sell something</Link>
             </Button>
           </div>
         </div>
