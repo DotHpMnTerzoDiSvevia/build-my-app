@@ -13,6 +13,9 @@ import {
   Package,
   Shield,
   MessageSquare,
+  Menu,
+  Tag,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-provider";
@@ -35,6 +38,11 @@ export function Header() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [unread, setUnread] = useState(0);
+  const [cats, setCats] = useState<{ id: string; name: string; slug: string }[]>([]);
+
+  useEffect(() => {
+    supabase.from("categories").select("id,name,slug").order("name").then(({ data }) => setCats(data ?? []));
+  }, []);
 
   useEffect(() => {
     if (!user) return setUnread(0);
@@ -72,10 +80,31 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
+    <header className="sticky top-0 z-40 border-b bg-background/70 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Menu">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-60">
+            <DropdownMenuLabel>Browse</DropdownMenuLabel>
+            <DropdownMenuItem asChild><Link to="/browse"><Sparkles className="mr-2 h-4 w-4" />All listings</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link to="/browse" search={{ type: "new" }}><Package className="mr-2 h-4 w-4" />New products</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link to="/browse" search={{ type: "classified" }}><Tag className="mr-2 h-4 w-4" />Classified ads</Link></DropdownMenuItem>
+            {cats.length > 0 && <DropdownMenuSeparator />}
+            {cats.length > 0 && <DropdownMenuLabel>Categories</DropdownMenuLabel>}
+            {cats.map((c) => (
+              <DropdownMenuItem key={c.id} asChild>
+                <Link to="/browse" search={{ category: c.slug }}>{c.name}</Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
+          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground shadow-[0_0_24px_-4px_var(--primary)]">
             <Package className="h-4 w-4" />
           </div>
           <span className="hidden sm:inline">TheVault</span>
