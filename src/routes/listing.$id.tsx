@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice, CONDITION_LABELS } from "@/lib/format";
 import { Heart, ShoppingCart, BellRing, Pencil, Trash2 } from "lucide-react";
+import { Reviews } from "@/components/Reviews";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/listing/$id")({
@@ -131,8 +132,25 @@ function ListingDetail() {
   const startChat = async () => {
     if (!requireAuth()) return;
     if (isOwner) return toast.error("That's your own listing.");
-    // Will be wired in next turn
-    toast.info("Chat is coming in the next update.");
+    // find or create conversation
+    const { data: existing } = await supabase
+      .from("conversations")
+      .select("id")
+      .eq("listing_id", id)
+      .eq("buyer_id", user!.id)
+      .eq("seller_id", l!.seller_id)
+      .maybeSingle();
+    if (existing) {
+      navigate({ to: "/chat/$id", params: { id: existing.id } });
+      return;
+    }
+    const { data: created, error } = await supabase
+      .from("conversations")
+      .insert({ buyer_id: user!.id, seller_id: l!.seller_id, listing_id: id })
+      .select("id")
+      .single();
+    if (error) return toast.error(error.message);
+    navigate({ to: "/chat/$id", params: { id: created.id } });
   };
 
   return (
