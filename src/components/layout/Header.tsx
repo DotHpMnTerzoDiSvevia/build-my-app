@@ -12,6 +12,7 @@ import {
   Bell,
   Package,
   Shield,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-provider";
@@ -107,10 +108,13 @@ export function Header() {
                   )}
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="icon" aria-label="Wishlist">
+              <Button asChild variant="ghost" size="icon" aria-label="Messages" className="hidden md:inline-flex">
+                <Link to="/chat"><MessageSquare className="h-4 w-4" /></Link>
+              </Button>
+              <Button asChild variant="ghost" size="icon" aria-label="Wishlist" className="hidden md:inline-flex">
                 <Link to="/wishlist"><Heart className="h-4 w-4" /></Link>
               </Button>
-              <Button asChild variant="ghost" size="icon" aria-label="Cart">
+              <Button asChild variant="ghost" size="icon" aria-label="Cart" className="hidden md:inline-flex">
                 <Link to="/cart"><ShoppingCart className="h-4 w-4" /></Link>
               </Button>
               <Button asChild size="sm" className="hidden sm:inline-flex">
@@ -128,6 +132,7 @@ export function Header() {
                   <DropdownMenuItem asChild><Link to="/profile">Profile</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link to="/my-listings">My listings</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/chat">Messages</Link></DropdownMenuItem>
                   {isStaff && (
                     <DropdownMenuItem asChild>
                       <Link to="/staff/products"><Package className="mr-2 h-4 w-4" />Manage products</Link>

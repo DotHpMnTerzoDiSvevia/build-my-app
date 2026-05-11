@@ -22,10 +22,12 @@ import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChatIndexRouteImport } from './routes/chat.index'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as StaffProductsRouteImport } from './routes/staff.products'
 import { Route as SellIdRouteImport } from './routes/sell.$id'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
+import { Route as ChatIdRouteImport } from './routes/chat.$id'
 
 const WishlistRoute = WishlistRouteImport.update({
   id: '/wishlist',
@@ -92,6 +94,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatIndexRoute = ChatIndexRouteImport.update({
+  id: '/chat/',
+  path: '/chat/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UUsernameRoute = UUsernameRouteImport.update({
   id: '/u/$username',
   path: '/u/$username',
@@ -112,6 +119,11 @@ const ListingIdRoute = ListingIdRouteImport.update({
   path: '/listing/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatIdRoute = ChatIdRouteImport.update({
+  id: '/chat/$id',
+  path: '/chat/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -127,10 +139,12 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/sell': typeof SellRouteWithChildren
   '/wishlist': typeof WishlistRoute
+  '/chat/$id': typeof ChatIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/sell/$id': typeof SellIdRoute
   '/staff/products': typeof StaffProductsRoute
   '/u/$username': typeof UUsernameRoute
+  '/chat/': typeof ChatIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -146,10 +160,12 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/sell': typeof SellRouteWithChildren
   '/wishlist': typeof WishlistRoute
+  '/chat/$id': typeof ChatIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/sell/$id': typeof SellIdRoute
   '/staff/products': typeof StaffProductsRoute
   '/u/$username': typeof UUsernameRoute
+  '/chat': typeof ChatIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -166,10 +182,12 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/sell': typeof SellRouteWithChildren
   '/wishlist': typeof WishlistRoute
+  '/chat/$id': typeof ChatIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/sell/$id': typeof SellIdRoute
   '/staff/products': typeof StaffProductsRoute
   '/u/$username': typeof UUsernameRoute
+  '/chat/': typeof ChatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -187,10 +205,12 @@ export interface FileRouteTypes {
     | '/search'
     | '/sell'
     | '/wishlist'
+    | '/chat/$id'
     | '/listing/$id'
     | '/sell/$id'
     | '/staff/products'
     | '/u/$username'
+    | '/chat/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -206,10 +226,12 @@ export interface FileRouteTypes {
     | '/search'
     | '/sell'
     | '/wishlist'
+    | '/chat/$id'
     | '/listing/$id'
     | '/sell/$id'
     | '/staff/products'
     | '/u/$username'
+    | '/chat'
   id:
     | '__root__'
     | '/'
@@ -225,10 +247,12 @@ export interface FileRouteTypes {
     | '/search'
     | '/sell'
     | '/wishlist'
+    | '/chat/$id'
     | '/listing/$id'
     | '/sell/$id'
     | '/staff/products'
     | '/u/$username'
+    | '/chat/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -245,9 +269,11 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SellRoute: typeof SellRouteWithChildren
   WishlistRoute: typeof WishlistRoute
+  ChatIdRoute: typeof ChatIdRoute
   ListingIdRoute: typeof ListingIdRoute
   StaffProductsRoute: typeof StaffProductsRoute
   UUsernameRoute: typeof UUsernameRoute
+  ChatIndexRoute: typeof ChatIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -343,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat/': {
+      id: '/chat/'
+      path: '/chat'
+      fullPath: '/chat/'
+      preLoaderRoute: typeof ChatIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$username': {
       id: '/u/$username'
       path: '/u/$username'
@@ -369,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/listing/$id'
       fullPath: '/listing/$id'
       preLoaderRoute: typeof ListingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat/$id': {
+      id: '/chat/$id'
+      path: '/chat/$id'
+      fullPath: '/chat/$id'
+      preLoaderRoute: typeof ChatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -398,9 +438,11 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SellRoute: SellRouteWithChildren,
   WishlistRoute: WishlistRoute,
+  ChatIdRoute: ChatIdRoute,
   ListingIdRoute: ListingIdRoute,
   StaffProductsRoute: StaffProductsRoute,
   UUsernameRoute: UUsernameRoute,
+  ChatIndexRoute: ChatIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
