@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Lock, Truck, MapPin, CreditCard, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({ component: CheckoutPage });
 
