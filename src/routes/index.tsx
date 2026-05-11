@@ -1,16 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ListingCard, type ListingCardData } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Tag, ShoppingBag } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Sparkles, Tag, Search } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState("");
   const [featured, setFeatured] = useState<ListingCardData[]>([]);
   const [recent, setRecent] = useState<ListingCardData[]>([]);
 
