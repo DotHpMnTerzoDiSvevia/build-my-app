@@ -97,12 +97,19 @@ function CheckoutPage() {
     return (
       <AppLayout>
         <div className="mx-auto max-w-md py-10 text-center">
-          <CheckCircle2 className="mx-auto h-14 w-14 text-primary" />
-          <h1 className="mt-4 text-2xl font-bold">Order confirmed</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Your tracking number is <span className="font-mono font-semibold text-foreground">{done.tracking}</span>
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">(simulated payment — no real charge)</p>
+          <div className="mx-auto mb-4 grid h-20 w-20 place-items-center rounded-full bg-success/15 text-success ring-8 ring-success/5">
+            <CheckCircle2 className="h-10 w-10" />
+          </div>
+          <h1 className="text-2xl font-bold">Order confirmed</h1>
+          <p className="mt-2 text-sm text-muted-foreground">A confirmation has been sent to your email.</p>
+          <div className="mx-auto mt-5 max-w-xs rounded-2xl border bg-card p-4 text-left">
+            <div className="text-xs text-muted-foreground">Tracking number</div>
+            <div className="mt-1 font-mono text-lg font-semibold">{done.tracking}</div>
+            <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+              <Truck className="h-3.5 w-3.5" /> Estimated delivery in 3–5 days (simulated)
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">No real charge was made — this is a demo checkout.</p>
           <div className="mt-6 flex justify-center gap-2">
             <Button asChild><Link to="/orders">View orders</Link></Button>
             <Button asChild variant="outline"><Link to="/browse">Keep shopping</Link></Button>
@@ -114,42 +121,65 @@ function CheckoutPage() {
 
   return (
     <AppLayout>
-      <div className="mx-auto max-w-2xl">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight">Checkout</h1>
-        <p className="mb-6 text-sm text-muted-foreground">This is a simulated checkout — no real charge or shipment.</p>
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Checkout</h1>
+            <p className="text-sm text-muted-foreground">Review your order and ship it (simulated).</p>
+          </div>
+          <div className="hidden items-center gap-1.5 rounded-full border bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground sm:inline-flex">
+            <Lock className="h-3 w-3" /> Secure demo checkout
+          </div>
+        </div>
+
         {items.length === 0 ? (
           <div className="rounded-xl border border-dashed p-10 text-center text-sm text-muted-foreground">
             Your cart is empty. <Link to="/browse" className="underline">Browse</Link>
           </div>
         ) : (
-          <form onSubmit={submit} className="space-y-5">
-            <div className="rounded-xl border bg-card p-4 text-sm">
-              <div className="mb-2 font-semibold">Order summary</div>
-              {items.map((r) => (
-                <div key={r.id} className="flex justify-between py-1">
-                  <span>{r.listing.title} × {r.quantity}</span>
-                  <span>{formatPrice(r.listing.price * r.quantity)}</span>
+          <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[1fr_340px]">
+            <div className="space-y-6">
+              <section className="rounded-2xl border bg-card p-5">
+                <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold"><MapPin className="h-4 w-4 text-primary" />Shipping address</h2>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2"><Label className="mb-1.5 block">Full name</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
+                  <div className="col-span-2"><Label className="mb-1.5 block">Address</Label><Input value={addr} onChange={(e) => setAddr(e.target.value)} required placeholder="Street, number, apt." /></div>
+                  <div><Label className="mb-1.5 block">City</Label><Input value={city} onChange={(e) => setCity(e.target.value)} required /></div>
+                  <div><Label className="mb-1.5 block">ZIP</Label><Input value={zip} onChange={(e) => setZip(e.target.value)} required /></div>
                 </div>
-              ))}
-              <div className="mt-2 flex justify-between border-t pt-2 font-semibold">
-                <span>Total</span><span>{formatPrice(total)}</span>
+              </section>
+
+              <section className="rounded-2xl border bg-card p-5">
+                <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold"><CreditCard className="h-4 w-4 text-primary" />Payment</h2>
+                <div className="rounded-xl border border-dashed bg-muted/30 p-4 text-sm">
+                  <div className="font-medium">Demo payment</div>
+                  <p className="mt-1 text-xs text-muted-foreground">No card required — your order will be placed instantly with a generated tracking number.</p>
+                </div>
+              </section>
+            </div>
+
+            <aside className="h-fit space-y-4 rounded-2xl border bg-card p-5 lg:sticky lg:top-20">
+              <h2 className="text-sm font-semibold">Order summary</h2>
+              <div className="space-y-2 text-sm">
+                {items.map((r) => (
+                  <div key={r.id} className="flex justify-between gap-3">
+                    <span className="line-clamp-1 text-muted-foreground">{r.listing.title} <span className="text-foreground">× {r.quantity}</span></span>
+                    <span className="shrink-0 font-medium">{formatPrice(r.listing.price * r.quantity)}</span>
+                  </div>
+                ))}
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="col-span-2"><Label className="mb-1.5 block">Full name</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
-              <div className="col-span-2"><Label className="mb-1.5 block">Address</Label><Input value={addr} onChange={(e) => setAddr(e.target.value)} required /></div>
-              <div><Label className="mb-1.5 block">City</Label><Input value={city} onChange={(e) => setCity(e.target.value)} required /></div>
-              <div><Label className="mb-1.5 block">ZIP</Label><Input value={zip} onChange={(e) => setZip(e.target.value)} required /></div>
-            </div>
-
-            <div className="rounded-xl border border-dashed p-4 text-xs text-muted-foreground">
-              💳 Payment is simulated. Click below to place your order — no real card needed.
-            </div>
-
-            <Button type="submit" disabled={busy} size="lg" className="w-full">
-              {busy ? "Placing order…" : `Place order (${formatPrice(total)})`}
-            </Button>
+              <div className="space-y-1.5 border-t pt-3 text-sm">
+                <div className="flex justify-between text-muted-foreground"><span>Subtotal</span><span>{formatPrice(total)}</span></div>
+                <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span className="text-success">Free</span></div>
+                <div className="flex justify-between border-t pt-2 text-base font-semibold"><span>Total</span><span>{formatPrice(total)}</span></div>
+              </div>
+              <Button type="submit" disabled={busy} size="lg" className="w-full">
+                {busy ? "Placing order…" : `Place order · ${formatPrice(total)}`}
+              </Button>
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+                <ShieldCheck className="h-3 w-3" /> Simulated transaction · no real charge
+              </div>
+            </aside>
           </form>
         )}
       </div>
