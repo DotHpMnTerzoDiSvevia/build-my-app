@@ -264,6 +264,10 @@ function ListingDetail() {
               {l.description || "No description provided."}
             </p>
           </div>
+
+          <div className="border-t pt-4">
+            <Reviews sellerId={l.seller_id} />
+          </div>
         </aside>
       </div>
     </AppLayout>
