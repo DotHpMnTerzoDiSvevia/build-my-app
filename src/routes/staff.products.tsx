@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { X, Upload, Trash2 } from "lucide-react";
+import { X, Upload, Trash2, Star } from "lucide-react";
 
 export const Route = createFileRoute("/staff/products")({ component: StaffProductsPage });
 
@@ -75,7 +75,7 @@ function StaffProductsPage() {
                 <td className="p-3">{p.title}</td>
                 <td className="p-3">${p.price}</td>
                 <td className="p-3">{p.quantity}</td>
-                <td className="p-3">{p.featured ? "★" : "—"}</td>
+                <td className="p-3">{p.featured ? <Star className="h-4 w-4 text-warning fill-warning" /> : "—"}</td>
                 <td className="p-3">{p.status}</td>
                 <td className="p-3">
                   <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>Edit</Button>

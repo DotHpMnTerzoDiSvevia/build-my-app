@@ -72,19 +72,79 @@ export function Header() {
     e.preventDefault();
     const trimmed = q.trim();
     if (!trimmed) return;
-    if (/^PROD-\d+$/i.test(trimmed)) {
-      navigate({ to: "/search", search: { q: trimmed } });
-    } else {
-      navigate({ to: "/search", search: { q: trimmed } });
-    }
+    navigate({ to: "/search", search: { q: trimmed } });
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4">
+    <header className="sticky top-0 z-40 w-full bg-accent text-accent-foreground shadow-sm">
+      {/* ── MOBILE HEADER ── */}
+      <div className="flex h-14 items-center justify-between px-4 md:hidden">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2" aria-label="TheVault home">
+          <Package className="h-6 w-6 text-primary" />
+          <span className="text-base font-bold tracking-tight text-white">TheVault</span>
+        </Link>
+
+        {/* Right icons */}
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+
+          {user && (
+            <Button asChild variant="ghost" size="icon" aria-label="Notifications" className="relative h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+              <Link to="/notifications">
+                <Bell className="h-4 w-4" />
+                {unread > 0 && (
+                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-accent" />
+                )}
+              </Link>
+            </Button>
+          )}
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+                  <UserIcon className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuLabel className="truncate text-xs text-muted-foreground font-normal">{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild><Link to="/profile">Profile</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/my-listings">My listings</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/chat">Messages</Link></DropdownMenuItem>
+                {isStaff && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/staff/products"><Package className="mr-2 h-4 w-4" />Manage products</Link>
+                  </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin"><Shield className="mr-2 h-4 w-4" />Admin</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild size="sm" className="h-8 px-4 text-xs bg-primary text-primary-foreground hover:bg-primary/90 rounded-sm">
+              <Link to="/auth">Sign in</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* ── DESKTOP HEADER ── */}
+      <div className="mx-auto hidden h-16 max-w-7xl items-center gap-4 px-4 md:flex">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Menu">
+            <Button variant="ghost" size="icon" aria-label="Menu" className="text-white hover:bg-white/10 hover:text-white">
               <Menu className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
@@ -103,55 +163,55 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground shadow-[0_0_24px_-4px_var(--primary)]">
-            <Package className="h-4 w-4" />
-          </div>
-          <span className="hidden sm:inline">TheVault</span>
+        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight text-white hover:text-primary transition-colors">
+          <Package className="h-7 w-7 text-primary" />
+          <span className="hidden sm:inline text-lg">TheVault</span>
         </Link>
 
-        <form onSubmit={onSubmit} className="relative flex-1 max-w-xl">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <form onSubmit={onSubmit} className="relative flex-1 max-w-xl flex h-10">
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products, ads, users, or PROD-12345…"
-            className="pl-9"
+            className="rounded-r-none border-none bg-background text-foreground focus-visible:ring-0 h-full"
           />
+          <Button type="submit" variant="default" className="rounded-l-none bg-primary text-primary-foreground hover:bg-primary/90 h-full px-5">
+            <Search className="h-5 w-5" />
+          </Button>
         </form>
 
         <nav className="ml-auto flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme" className="text-white hover:bg-white/10 hover:text-white">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
 
           {user && (
             <>
-              <Button asChild variant="ghost" size="icon" aria-label="Notifications" className="relative">
+              <Button asChild variant="ghost" size="icon" aria-label="Notifications" className="relative text-white hover:bg-white/10 hover:text-white">
                 <Link to="/notifications">
                   <Bell className="h-4 w-4" />
                   {unread > 0 && (
-                    <Badge className="absolute -right-1 -top-1 h-4 min-w-4 px-1 text-[10px]">
+                    <Badge className="absolute -right-1 -top-1 h-4 min-w-4 px-1 text-[10px] bg-destructive text-destructive-foreground">
                       {unread}
                     </Badge>
                   )}
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="icon" aria-label="Messages" className="hidden md:inline-flex">
+              <Button asChild variant="ghost" size="icon" aria-label="Messages" className="hidden md:inline-flex text-white hover:bg-white/10 hover:text-white">
                 <Link to="/chat"><MessageSquare className="h-4 w-4" /></Link>
               </Button>
-              <Button asChild variant="ghost" size="icon" aria-label="Wishlist" className="hidden md:inline-flex">
+              <Button asChild variant="ghost" size="icon" aria-label="Wishlist" className="hidden md:inline-flex text-white hover:bg-white/10 hover:text-white">
                 <Link to="/wishlist"><Heart className="h-4 w-4" /></Link>
               </Button>
-              <Button asChild variant="ghost" size="icon" aria-label="Cart" className="hidden md:inline-flex">
+              <Button asChild variant="ghost" size="icon" aria-label="Cart" className="hidden md:inline-flex text-white hover:bg-white/10 hover:text-white">
                 <Link to="/cart"><ShoppingCart className="h-4 w-4" /></Link>
               </Button>
-              <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Button asChild size="sm" className="hidden sm:inline-flex ml-2 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-medium">
                 <Link to="/sell"><Plus className="mr-1 h-4 w-4" />Sell</Link>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white ml-1">
                     <UserIcon className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -182,7 +242,7 @@ export function Header() {
           )}
 
           {!user && (
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="ml-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium rounded-sm">
               <Link to="/auth">Sign in</Link>
             </Button>
           )}

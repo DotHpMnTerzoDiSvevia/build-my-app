@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Camera } from "lucide-react";
 
 export const Route = createFileRoute("/chat/")({ component: ChatList });
 
@@ -97,7 +97,7 @@ function ChatList() {
                   </div>
                   <div className="truncate text-xs text-muted-foreground">
                     {c.listing?.title ? `Re: ${c.listing.title} — ` : ""}
-                    {c.last?.body || (c.last?.image_url ? "📷 Image" : "New conversation")}
+                    {c.last?.body || (c.last?.image_url ? <span className="inline-flex items-center gap-1"><Camera className="h-3 w-3" /> Image</span> : "New conversation")}
                   </div>
                 </div>
               </Link>
