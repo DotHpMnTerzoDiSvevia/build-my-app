@@ -78,7 +78,7 @@ const BANNERS = [
     id: 3,
     label: "Sell with us",
     title: "Turn your stuff into cash",
-    sub: "Post a free classified ad in under 2 minutes",
+    sub: "Post a free used ad in under 2 minutes",
     cta: "Post an ad",
     to: "/sell",
     search: {},
