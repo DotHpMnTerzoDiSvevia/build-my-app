@@ -284,7 +284,7 @@ function Index() {
                   : "border-border bg-background text-muted-foreground hover:border-accent/40 hover:text-foreground",
               )}
             >
-              {t === "all" ? "All" : t === "new" ? "New" : "Classified"}
+              {t === "all" ? "All" : t === "new" ? "New" : "Used"}
             </button>
           ))}
         </div>
