@@ -14,12 +14,15 @@ import { X, Upload } from "lucide-react";
 export const Route = createFileRoute("/sell")({ component: SellPage });
 
 function SellPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, isStaff } = useAuth();
   const navigate = useNavigate();
   const [cats, setCats] = useState<{ id: string; name: string }[]>([]);
+  const [type, setType] = useState<"classified" | "new">("classified");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("1");
+  const [sku, setSku] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [condition, setCondition] = useState<string>("good");
   const [images, setImages] = useState<string[]>([]);
@@ -52,26 +55,31 @@ function SellPage() {
     if (!user) return;
     if (!title || !price) return toast.error("Title and price are required.");
     setBusy(true);
+    const isNew = isStaff && type === "new";
+    const qty = isNew ? Math.max(0, parseInt(quantity || "0", 10)) : 1;
     const { data, error } = await supabase
       .from("listings")
       .insert({
-        type: "classified",
+        type: isNew ? "new" : "classified",
         seller_id: user.id,
         title, description,
         price: parseFloat(price),
         category_id: categoryId || null,
-        condition: condition as never,
-        quantity: 1,
+        condition: isNew ? null : (condition as never),
+        sku: isNew ? (sku || null) : null,
+        quantity: qty,
         images,
+        status: isNew && qty === 0 ? ("sold" as never) : ("active" as never),
       })
       .select("id").single();
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Ad posted!");
+    toast.success(isNew ? "Product published!" : "Ad posted!");
     navigate({ to: "/listing/$id", params: { id: data.id } });
   };
 
   if (loading || !user) return <AppLayout><div className="py-20 text-center text-muted-foreground">…</div></AppLayout>;
+  const isNewMode = isStaff && type === "new";
 
   return (
     <AppLayout>
