@@ -42,7 +42,7 @@ export function BottomNav() {
                 <span
                   className={cn(
                     "text-[10px] font-medium transition-colors duration-200",
-                    active ? "text-accent" : "text-muted-foreground",
+                    active ? "text-accent dark:text-accent-foreground" : "text-muted-foreground",
                   )}
                 >
                   {it.label}
