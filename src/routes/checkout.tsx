@@ -145,7 +145,7 @@ function CheckoutPage() {
                   <div className="col-span-2"><Label className="mb-1.5 block">Full name</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
                   <div className="col-span-2"><Label className="mb-1.5 block">Address</Label><Input value={addr} onChange={(e) => setAddr(e.target.value)} required placeholder="Street, number, apt." /></div>
                   <div><Label className="mb-1.5 block">City</Label><Input value={city} onChange={(e) => setCity(e.target.value)} required /></div>
-                  <div><Label className="mb-1.5 block">ZIP</Label><Input value={zip} onChange={(e) => setZip(e.target.value)} required /></div>
+                  <div><Label className="mb-1.5 block">CAP</Label><Input value={zip} onChange={(e) => setZip(e.target.value)} required /></div>
                 </div>
               </section>
 

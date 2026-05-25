@@ -39,7 +39,7 @@ function NotificationsPage() {
             <Link
               key={n.id}
               to={n.link ?? "/"}
-              className={`block rounded-xl border p-4 hover:bg-accent ${n.read ? "" : "border-primary/40 bg-primary/5"}`}
+              className={`block rounded-xl border p-4 transition-colors hover:bg-muted dark:hover:bg-transparent ${n.read ? "" : "border-primary/40 bg-primary/5"}`}
             >
               <div className="font-medium">{n.title}</div>
               {n.body && <div className="text-sm text-muted-foreground">{n.body}</div>}

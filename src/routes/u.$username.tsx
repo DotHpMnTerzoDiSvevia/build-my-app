@@ -10,8 +10,13 @@ function PublicProfilePage() {
   const { username } = Route.useParams();
   const [profile, setProfile] = useState<any>(null);
   const [items, setItems] = useState<ListingCardData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+    setProfile(null);
+    setItems([]);
+    if (!username) { setLoading(false); return; }
     supabase.from("profiles").select("*").eq("username", username).maybeSingle().then(async ({ data }) => {
       setProfile(data);
       if (data) {
@@ -22,9 +27,11 @@ function PublicProfilePage() {
           .order("created_at", { ascending: false });
         setItems((l ?? []) as ListingCardData[]);
       }
+      setLoading(false);
     });
   }, [username]);
 
+  if (loading) return <AppLayout><div className="py-20 text-center text-muted-foreground">Loading…</div></AppLayout>;
   if (!profile) return <AppLayout><div className="py-20 text-center text-muted-foreground">User not found.</div></AppLayout>;
 
   return (
