@@ -76,7 +76,7 @@ function SellPage() {
   return (
     <AppLayout>
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight">Post a classified ad</h1>
+        <h1 className="mb-1 text-2xl font-bold tracking-tight">Post a used ad</h1>
         <p className="mb-6 text-sm text-muted-foreground">Sell something you no longer need. Up to 5 photos.</p>
         <form onSubmit={submit} className="space-y-5">
           <div>
