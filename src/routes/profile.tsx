@@ -203,10 +203,11 @@ function ProfilePage() {
               <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Staff Tools</span>
             </div>
             <nav className="space-y-1.5">
-              {STAFF_ITEMS.map(({ icon: Icon, label, to }) => (
+              {STAFF_ITEMS.map(({ icon: Icon, label, to, search }) => (
                 <Link
                   key={to + label}
                   to={to as any}
+                  search={search as any}
                   className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 hover:border-primary/40 hover:bg-primary/10 transition group"
                 >
                   <Icon className="h-4 w-4 text-primary" />
