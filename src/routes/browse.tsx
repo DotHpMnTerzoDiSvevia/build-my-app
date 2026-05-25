@@ -49,7 +49,7 @@ function BrowsePage() {
     let q = supabase
       .from("listings")
       .select("id,code,title,price,type,condition,quantity,images,featured")
-      .eq("status", "active");
+      .in("status", ["active", "sold"]);
 
     if (params.type && params.type !== "all") q = q.eq("type", params.type);
     if (params.category) q = q.eq("category_id", params.category);
