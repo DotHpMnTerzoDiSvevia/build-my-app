@@ -27,10 +27,10 @@ const MENU_ITEMS = [
 ];
 
 const STAFF_ITEMS = [
-  { icon: Package, label: "Manage Products", to: "/staff/products" },
-  { icon: Users, label: "User Management", to: "/admin" },
-  { icon: ClipboardList, label: "Moderation Queue", to: "/admin" },
-  { icon: BarChart2, label: "AI Insights", to: "/admin" },
+  { icon: Package, label: "Manage Products", to: "/staff/products", search: undefined as any },
+  { icon: Users, label: "User Management", to: "/admin", search: { tab: "users" } },
+  { icon: ClipboardList, label: "Moderation Queue", to: "/admin", search: { tab: "moderation" } },
+  { icon: BarChart2, label: "AI Insights", to: "/admin", search: { tab: "ai" } },
 ];
 
 function ProfilePage() {
