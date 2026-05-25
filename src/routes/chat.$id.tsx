@@ -121,9 +121,8 @@ function ChatRoom() {
                     mine ? "bg-primary text-primary-foreground" : "bg-muted",
                   )}
                 >
-                  {m.image_url && (
-                    <img src={m.image_url} alt="" className="mb-1 rounded-md max-h-60" />
-                  )}
+                  {m.image_url && <ChatImage url={m.image_url} />}
+
                   {m.body}
                   <div className={cn("mt-1 text-[10px] opacity-60", mine ? "text-right" : "")}>
                     {new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
