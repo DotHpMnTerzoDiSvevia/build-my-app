@@ -44,16 +44,20 @@ function ProfilePage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
-      if (data) setP({
-        username: data.username ?? "",
-        full_name: data.full_name ?? "",
-        address: data.address ?? "",
-        bio: data.bio ?? "",
-        avatar_url: data.avatar_url ?? "",
+    // Use SECURITY DEFINER RPC so the owner can read their own address
+    // (the address column is no longer publicly selectable).
+    supabase.rpc("get_my_profile").then(({ data }: any) => {
+      const row = Array.isArray(data) ? data[0] : data;
+      if (row) setP({
+        username: row.username ?? "",
+        full_name: row.full_name ?? "",
+        address: row.address ?? "",
+        bio: row.bio ?? "",
+        avatar_url: row.avatar_url ?? "",
       });
     });
   }, [user]);
+
 
   const onAvatar = async (file: File) => {
     if (!user) return;

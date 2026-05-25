@@ -89,12 +89,14 @@ function ChatRoom() {
 
   const onUpload = async (file: File) => {
     if (!user) return;
+    // Path MUST start with the uploader's user id (RLS folder check)
     const path = `${user.id}/${crypto.randomUUID()}-${file.name}`;
     const { error } = await supabase.storage.from("chat-images").upload(path, file);
     if (error) return toast.error(error.message);
-    const url = supabase.storage.from("chat-images").getPublicUrl(path).data.publicUrl;
-    send("", url);
+    // Bucket is private — store the storage path; we'll sign it on render.
+    send("", `storage:${path}`);
   };
+
 
   if (!user) return null;
 
@@ -119,9 +121,8 @@ function ChatRoom() {
                     mine ? "bg-primary text-primary-foreground" : "bg-muted",
                   )}
                 >
-                  {m.image_url && (
-                    <img src={m.image_url} alt="" className="mb-1 rounded-md max-h-60" />
-                  )}
+                  {m.image_url && <ChatImage url={m.image_url} />}
+
                   {m.body}
                   <div className={cn("mt-1 text-[10px] opacity-60", mine ? "text-right" : "")}>
                     {new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
@@ -172,3 +173,23 @@ function ChatRoom() {
     </AppLayout>
   );
 }
+
+function ChatImage({ url }: { url: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (url.startsWith("storage:")) {
+        const path = url.slice("storage:".length);
+        const { data } = await supabase.storage.from("chat-images").createSignedUrl(path, 3600);
+        if (!cancelled) setSrc(data?.signedUrl ?? null);
+      } else {
+        setSrc(url);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [url]);
+  if (!src) return null;
+  return <img src={src} alt="" className="mb-1 rounded-md max-h-60" />;
+}
+
