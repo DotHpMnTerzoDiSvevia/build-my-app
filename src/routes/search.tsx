@@ -28,7 +28,7 @@ const saveRecent = (q: string) => {
 const TYPE_FILTERS = [
   { label: "All", value: "" },
   { label: "New", value: "new" },
-  { label: "Classified", value: "classified" },
+  { label: "Used", value: "classified" },
 ];
 const SORT_OPTIONS = [
   { label: "Relevance", value: "" },
