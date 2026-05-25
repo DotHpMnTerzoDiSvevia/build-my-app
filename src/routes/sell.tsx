@@ -137,19 +137,32 @@ function SellPage() {
               <Label className="mb-1.5 block">Price ($)</Label>
               <Input type="number" min={0} step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required />
             </div>
-            <div>
-              <Label className="mb-1.5 block">Condition</Label>
-              <Select value={condition} onValueChange={setCondition}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new_with_tags">New with tags</SelectItem>
-                  <SelectItem value="excellent">Excellent</SelectItem>
-                  <SelectItem value="good">Good</SelectItem>
-                  <SelectItem value="fair">Fair</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {isNewMode ? (
+              <div>
+                <Label className="mb-1.5 block">Quantity</Label>
+                <Input type="number" min={0} value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+              </div>
+            ) : (
+              <div>
+                <Label className="mb-1.5 block">Condition</Label>
+                <Select value={condition} onValueChange={setCondition}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new_with_tags">New with tags</SelectItem>
+                    <SelectItem value="excellent">Excellent</SelectItem>
+                    <SelectItem value="good">Good</SelectItem>
+                    <SelectItem value="fair">Fair</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
+          {isNewMode && (
+            <div>
+              <Label className="mb-1.5 block">SKU (optional)</Label>
+              <Input value={sku} onChange={(e) => setSku(e.target.value)} />
+            </div>
+          )}
           <div>
             <Label className="mb-1.5 block">Category</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
