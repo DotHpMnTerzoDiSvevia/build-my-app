@@ -35,7 +35,7 @@ export function BottomNav() {
                 <Icon
                   className={cn(
                     "h-6 w-6 transition-colors duration-200",
-                    active ? "text-accent" : "text-muted-foreground",
+                    active ? "text-accent dark:text-accent-foreground" : "text-muted-foreground",
                   )}
                   strokeWidth={active ? 2.5 : 2}
                 />
