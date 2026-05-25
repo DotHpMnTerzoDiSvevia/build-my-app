@@ -14,12 +14,15 @@ import { X, Upload } from "lucide-react";
 export const Route = createFileRoute("/sell")({ component: SellPage });
 
 function SellPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, isStaff } = useAuth();
   const navigate = useNavigate();
   const [cats, setCats] = useState<{ id: string; name: string }[]>([]);
+  const [type, setType] = useState<"classified" | "new">("classified");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("1");
+  const [sku, setSku] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [condition, setCondition] = useState<string>("good");
   const [images, setImages] = useState<string[]>([]);
@@ -52,32 +55,51 @@ function SellPage() {
     if (!user) return;
     if (!title || !price) return toast.error("Title and price are required.");
     setBusy(true);
+    const isNew = isStaff && type === "new";
+    const qty = isNew ? Math.max(0, parseInt(quantity || "0", 10)) : 1;
     const { data, error } = await supabase
       .from("listings")
       .insert({
-        type: "classified",
+        type: isNew ? "new" : "classified",
         seller_id: user.id,
         title, description,
         price: parseFloat(price),
         category_id: categoryId || null,
-        condition: condition as never,
-        quantity: 1,
+        condition: isNew ? null : (condition as never),
+        sku: isNew ? (sku || null) : null,
+        quantity: qty,
         images,
+        status: isNew && qty === 0 ? ("sold" as never) : ("active" as never),
       })
       .select("id").single();
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Ad posted!");
+    toast.success(isNew ? "Product published!" : "Ad posted!");
     navigate({ to: "/listing/$id", params: { id: data.id } });
   };
 
   if (loading || !user) return <AppLayout><div className="py-20 text-center text-muted-foreground">…</div></AppLayout>;
+  const isNewMode = isStaff && type === "new";
 
   return (
     <AppLayout>
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight">Post a used ad</h1>
-        <p className="mb-6 text-sm text-muted-foreground">Sell something you no longer need. Up to 5 photos.</p>
+        <h1 className="mb-1 text-2xl font-bold tracking-tight">{isNewMode ? "Publish new product" : "Post a used ad"}</h1>
+        <p className="mb-6 text-sm text-muted-foreground">{isNewMode ? "Add a brand-new catalog item." : "Sell something you no longer need. Up to 5 photos."}</p>
+        {isStaff && (
+          <div className="mb-5 inline-flex rounded-md border bg-card p-1">
+            {(["classified", "new"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setType(t)}
+                className={`px-4 py-1.5 text-xs font-semibold rounded-sm transition ${type === t ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {t === "new" ? "New product" : "Used ad"}
+              </button>
+            ))}
+          </div>
+        )}
         <form onSubmit={submit} className="space-y-5">
           <div>
             <Label className="mb-1.5 block">Photos ({images.length}/5)</Label>
@@ -115,19 +137,32 @@ function SellPage() {
               <Label className="mb-1.5 block">Price ($)</Label>
               <Input type="number" min={0} step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required />
             </div>
-            <div>
-              <Label className="mb-1.5 block">Condition</Label>
-              <Select value={condition} onValueChange={setCondition}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new_with_tags">New with tags</SelectItem>
-                  <SelectItem value="excellent">Excellent</SelectItem>
-                  <SelectItem value="good">Good</SelectItem>
-                  <SelectItem value="fair">Fair</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {isNewMode ? (
+              <div>
+                <Label className="mb-1.5 block">Quantity</Label>
+                <Input type="number" min={0} value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+              </div>
+            ) : (
+              <div>
+                <Label className="mb-1.5 block">Condition</Label>
+                <Select value={condition} onValueChange={setCondition}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new_with_tags">New with tags</SelectItem>
+                    <SelectItem value="excellent">Excellent</SelectItem>
+                    <SelectItem value="good">Good</SelectItem>
+                    <SelectItem value="fair">Fair</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
+          {isNewMode && (
+            <div>
+              <Label className="mb-1.5 block">SKU (optional)</Label>
+              <Input value={sku} onChange={(e) => setSku(e.target.value)} />
+            </div>
+          )}
           <div>
             <Label className="mb-1.5 block">Category</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>

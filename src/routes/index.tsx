@@ -174,7 +174,7 @@ function Index() {
     supabase
       .from("listings")
       .select("id,code,title,price,type,condition,quantity,images,featured")
-      .eq("status", "active")
+      .in("status", ["active", "sold"])
       .eq("featured", true)
       .order("created_at", { ascending: false })
       .limit(8)
@@ -187,13 +187,22 @@ function Index() {
     let q = supabase
       .from("listings")
       .select("id,code,title,price,type,condition,quantity,images,featured")
-      .eq("status", "active")
+      .in("status", ["active", "sold"])
       .order("created_at", { ascending: false })
       .range(p * limit, p * limit + limit - 1);
     if (activeType !== "all") q = q.eq("type", activeType);
     const { data } = await q;
     const rows = (data ?? []) as ListingCardData[];
-    setRecent((prev) => reset ? rows : [...prev, ...rows]);
+    const featuredIds = new Set(featured.map((f) => f.id));
+    setRecent((prev) => {
+      const base = reset ? [] : prev;
+      const seen = new Set(base.map((x) => x.id));
+      const merged = [...base];
+      for (const r of rows) {
+        if (!featuredIds.has(r.id) && !seen.has(r.id)) { merged.push(r); seen.add(r.id); }
+      }
+      return merged;
+    });
     setHasMore(rows.length === limit);
     if (!reset) setPage(p + 1);
   };
