@@ -89,12 +89,14 @@ function ChatRoom() {
 
   const onUpload = async (file: File) => {
     if (!user) return;
+    // Path MUST start with the uploader's user id (RLS folder check)
     const path = `${user.id}/${crypto.randomUUID()}-${file.name}`;
     const { error } = await supabase.storage.from("chat-images").upload(path, file);
     if (error) return toast.error(error.message);
-    const url = supabase.storage.from("chat-images").getPublicUrl(path).data.publicUrl;
-    send("", url);
+    // Bucket is private — store the storage path; we'll sign it on render.
+    send("", `storage:${path}`);
   };
+
 
   if (!user) return null;
 
