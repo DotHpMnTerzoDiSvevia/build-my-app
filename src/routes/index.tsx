@@ -66,7 +66,7 @@ const BANNERS = [
   },
   {
     id: 2,
-    label: "Classified ads",
+    label: "Used ads",
     title: "Great finds from real people",
     sub: "Pre-loved items at amazing prices",
     cta: "Browse ads",
