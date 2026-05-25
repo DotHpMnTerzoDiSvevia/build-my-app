@@ -216,18 +216,30 @@ function ListingDetail() {
           </dl>
 
           {seller && (
-            <Link
-              to="/u/$username" params={{ username: seller.username ?? "" }}
-              className="flex items-center gap-3 rounded-xl border p-3 hover:bg-accent"
-            >
-              <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
-                {seller.avatar_url && <img src={seller.avatar_url} alt="" className="h-full w-full object-cover" />}
+            seller.username ? (
+              <Link
+                to="/u/$username" params={{ username: seller.username }}
+                className="flex items-center gap-3 rounded-xl border p-3 hover:bg-muted dark:hover:bg-accent transition-colors"
+              >
+                <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
+                  {seller.avatar_url && <img src={seller.avatar_url} alt="" className="h-full w-full object-cover" />}
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">Seller</div>
+                  <div className="font-medium">@{seller.username}</div>
+                </div>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-3 rounded-xl border p-3">
+                <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
+                  {seller.avatar_url && <img src={seller.avatar_url} alt="" className="h-full w-full object-cover" />}
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">Seller</div>
+                  <div className="font-medium text-muted-foreground">Anonymous</div>
+                </div>
               </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Seller</div>
-                <div className="font-medium">@{seller.username}</div>
-              </div>
-            </Link>
+            )
           )}
 
           <div className="space-y-2">
