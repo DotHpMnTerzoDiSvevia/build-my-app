@@ -97,7 +97,7 @@ function BrowsePage() {
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="new">New</SelectItem>
-                <SelectItem value="classified">Classified (used)</SelectItem>
+                <SelectItem value="classified">Used</SelectItem>
               </SelectContent>
             </Select>
           </div>
