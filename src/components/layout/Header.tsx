@@ -152,7 +152,7 @@ export function Header() {
             <DropdownMenuLabel>Browse</DropdownMenuLabel>
             <DropdownMenuItem asChild><Link to="/browse"><Sparkles className="mr-2 h-4 w-4" />All listings</Link></DropdownMenuItem>
             <DropdownMenuItem asChild><Link to="/browse" search={{ type: "new" }}><Package className="mr-2 h-4 w-4" />New products</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild><Link to="/browse" search={{ type: "classified" }}><Tag className="mr-2 h-4 w-4" />Classified ads</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link to="/browse" search={{ type: "classified" }}><Tag className="mr-2 h-4 w-4" />Used ads</Link></DropdownMenuItem>
             {cats.length > 0 && <DropdownMenuSeparator />}
             {cats.length > 0 && <DropdownMenuLabel>Categories</DropdownMenuLabel>}
             {cats.map((c) => (
