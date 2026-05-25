@@ -78,66 +78,79 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full bg-accent text-accent-foreground shadow-sm">
       {/* ── MOBILE HEADER ── */}
-      <div className="flex h-14 items-center justify-between px-4 md:hidden">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2" aria-label="TheVault home">
-          <Package className="h-6 w-6 text-primary" />
-          <span className="text-base font-bold tracking-tight text-white">TheVault</span>
-        </Link>
+      <div className="flex flex-col gap-2 px-4 py-2 md:hidden">
+        <div className="flex h-10 items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2" aria-label="TheVault home">
+            <Package className="h-6 w-6 text-primary" />
+            <span className="text-base font-bold tracking-tight text-white">TheVault</span>
+          </Link>
 
-        {/* Right icons */}
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-
-          {user && (
-            <Button asChild variant="ghost" size="icon" aria-label="Notifications" className="relative h-9 w-9 text-white hover:bg-white/10 hover:text-white">
-              <Link to="/notifications">
-                <Bell className="h-4 w-4" />
-                {unread > 0 && (
-                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-accent" />
-                )}
-              </Link>
+          {/* Right icons */}
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-          )}
 
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
-                  <UserIcon className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel className="truncate text-xs text-muted-foreground font-normal">{user.email}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/profile">Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/my-listings">My listings</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/chat">Messages</Link></DropdownMenuItem>
-                {isStaff && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/staff/products"><Package className="mr-2 h-4 w-4" />Manage products</Link>
+            {user && (
+              <Button asChild variant="ghost" size="icon" aria-label="Notifications" className="relative h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+                <Link to="/notifications">
+                  <Bell className="h-4 w-4" />
+                  {unread > 0 && (
+                    <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-accent" />
+                  )}
+                </Link>
+              </Button>
+            )}
+
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 text-white hover:bg-white/10 hover:text-white">
+                    <UserIcon className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuLabel className="truncate text-xs text-muted-foreground font-normal">{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link to="/profile">Profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/orders">My orders</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/my-listings">My listings</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/chat">Messages</Link></DropdownMenuItem>
+                  {isStaff && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/staff/products"><Package className="mr-2 h-4 w-4" />Manage products</Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin"><Shield className="mr-2 h-4 w-4" />Admin</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" />Sign out
                   </DropdownMenuItem>
-                )}
-                {isAdmin && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/admin"><Shield className="mr-2 h-4 w-4" />Admin</Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut className="mr-2 h-4 w-4" />Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button asChild size="sm" className="h-8 px-4 text-xs bg-primary text-primary-foreground hover:bg-primary/90 rounded-sm">
-              <Link to="/auth">Sign in</Link>
-            </Button>
-          )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild size="sm" className="h-8 px-4 text-xs bg-primary text-primary-foreground hover:bg-primary/90 rounded-sm">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            )}
+          </div>
         </div>
+
+        {/* Mobile search bar */}
+        <form onSubmit={onSubmit} className="relative flex h-9">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search products, ads, users…"
+            className="h-full rounded-full border-none bg-background pl-9 pr-4 text-sm text-foreground focus-visible:ring-0"
+          />
+        </form>
       </div>
 
       {/* ── DESKTOP HEADER ── */}
