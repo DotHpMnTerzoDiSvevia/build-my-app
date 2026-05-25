@@ -182,7 +182,7 @@ function ListingDetail() {
         <aside className="space-y-4">
           <div className="flex flex-wrap gap-1">
             <Badge variant={l.type === "new" ? "default" : "secondary"}>
-              {l.type === "new" ? "New" : "Classified"}
+              {l.type === "new" ? "New" : "Used"}
             </Badge>
             {l.featured && <Badge className="bg-amber-500 hover:bg-amber-500">Featured</Badge>}
             {category && <Badge variant="outline">{category}</Badge>}
