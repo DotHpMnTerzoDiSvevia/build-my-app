@@ -173,3 +173,23 @@ function ChatRoom() {
     </AppLayout>
   );
 }
+
+function ChatImage({ url }: { url: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (url.startsWith("storage:")) {
+        const path = url.slice("storage:".length);
+        const { data } = await supabase.storage.from("chat-images").createSignedUrl(path, 3600);
+        if (!cancelled) setSrc(data?.signedUrl ?? null);
+      } else {
+        setSrc(url);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [url]);
+  if (!src) return null;
+  return <img src={src} alt="" className="mb-1 rounded-md max-h-60" />;
+}
+
