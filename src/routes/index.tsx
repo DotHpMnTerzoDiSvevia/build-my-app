@@ -105,7 +105,7 @@ function BannerCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative px-6 py-12 sm:px-10 sm:py-16">
+      <div className="relative px-12 py-12 sm:px-10 sm:py-16">
         <span className="mb-3 inline-flex items-center rounded-sm bg-background/80 px-2 py-1 text-[11px] font-bold uppercase tracking-wider shadow-sm">
           {b.label}
         </span>
