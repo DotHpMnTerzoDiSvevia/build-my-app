@@ -84,8 +84,22 @@ function SellPage() {
   return (
     <AppLayout>
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight">Post a used ad</h1>
-        <p className="mb-6 text-sm text-muted-foreground">Sell something you no longer need. Up to 5 photos.</p>
+        <h1 className="mb-1 text-2xl font-bold tracking-tight">{isNewMode ? "Publish new product" : "Post a used ad"}</h1>
+        <p className="mb-6 text-sm text-muted-foreground">{isNewMode ? "Add a brand-new catalog item." : "Sell something you no longer need. Up to 5 photos."}</p>
+        {isStaff && (
+          <div className="mb-5 inline-flex rounded-md border bg-card p-1">
+            {(["classified", "new"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setType(t)}
+                className={`px-4 py-1.5 text-xs font-semibold rounded-sm transition ${type === t ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {t === "new" ? "New product" : "Used ad"}
+              </button>
+            ))}
+          </div>
+        )}
         <form onSubmit={submit} className="space-y-5">
           <div>
             <Label className="mb-1.5 block">Photos ({images.length}/5)</Label>
