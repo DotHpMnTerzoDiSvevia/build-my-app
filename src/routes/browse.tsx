@@ -56,7 +56,10 @@ function BrowsePage() {
     if (params.condition) q = q.eq("condition", params.condition as never);
     if (params.min != null) q = q.gte("price", params.min);
     if (params.max != null) q = q.lte("price", params.max);
-    if (params.q) q = q.or(`title.ilike.%${params.q}%,description.ilike.%${params.q}%`);
+    if (params.q) {
+      const safe = params.q.replace(/%/g, "\\%").replace(/_/g, "\\_");
+      q = q.or(`title.ilike.%${safe}%,description.ilike.%${safe}%`);
+    }
 
     if (params.sort === "price_asc") q = q.order("price", { ascending: true });
     else if (params.sort === "price_desc") q = q.order("price", { ascending: false });

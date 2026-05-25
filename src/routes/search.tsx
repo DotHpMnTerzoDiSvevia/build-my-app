@@ -66,11 +66,12 @@ function SearchPage() {
     }
 
     setLoading(true);
+    const safe = query.replace(/%/g, "\\%").replace(/_/g, "\\_");
     let pq = supabase
       .from("listings")
       .select("id,code,title,price,type,condition,quantity,images,featured")
       .eq("status", "active")
-      .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+      .or(`title.ilike.%${safe}%,description.ilike.%${safe}%`)
       .limit(24);
     if (typeFilter) pq = pq.eq("type", typeFilter as "new" | "classified");
     if (sortBy === "price_asc") pq = pq.order("price", { ascending: true });
