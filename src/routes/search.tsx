@@ -28,7 +28,7 @@ const saveRecent = (q: string) => {
 const TYPE_FILTERS = [
   { label: "All", value: "" },
   { label: "New", value: "new" },
-  { label: "Classified", value: "classified" },
+  { label: "Used", value: "classified" },
 ];
 const SORT_OPTIONS = [
   { label: "Relevance", value: "" },
@@ -258,7 +258,7 @@ function SearchPage() {
       {!q && !recent.length && (
         <div className="mt-16 text-center text-sm text-muted-foreground">
           <Sparkles className="mx-auto mb-3 h-10 w-10 text-muted-foreground/50" />
-          Start typing to search products, classifieds, and users.
+          Start typing to search products, used items, and users.
         </div>
       )}
     </AppLayout>

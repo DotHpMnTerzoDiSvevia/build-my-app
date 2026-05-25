@@ -127,7 +127,7 @@ function CartPage() {
                               : "bg-accent/15 text-accent",
                           )}
                         >
-                          {l.type === "new" ? "New" : "Classified"}
+                          {l.type === "new" ? "New" : "Used"}
                         </span>
                         <span className="text-[10px] text-muted-foreground">{l.code}</span>
                       </div>

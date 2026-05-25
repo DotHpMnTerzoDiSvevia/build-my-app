@@ -66,7 +66,7 @@ const BANNERS = [
   },
   {
     id: 2,
-    label: "Classified ads",
+    label: "Used ads",
     title: "Great finds from real people",
     sub: "Pre-loved items at amazing prices",
     cta: "Browse ads",
@@ -78,7 +78,7 @@ const BANNERS = [
     id: 3,
     label: "Sell with us",
     title: "Turn your stuff into cash",
-    sub: "Post a free classified ad in under 2 minutes",
+    sub: "Post a free used ad in under 2 minutes",
     cta: "Post an ad",
     to: "/sell",
     search: {},
@@ -105,7 +105,7 @@ function BannerCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative px-6 py-12 sm:px-10 sm:py-16">
+      <div className="relative px-12 py-12 sm:px-10 sm:py-16">
         <span className="mb-3 inline-flex items-center rounded-sm bg-background/80 px-2 py-1 text-[11px] font-bold uppercase tracking-wider shadow-sm">
           {b.label}
         </span>
@@ -284,7 +284,7 @@ function Index() {
                   : "border-border bg-background text-muted-foreground hover:border-accent/40 hover:text-foreground",
               )}
             >
-              {t === "all" ? "All" : t === "new" ? "New" : "Classified"}
+              {t === "all" ? "All" : t === "new" ? "New" : "Used"}
             </button>
           ))}
         </div>

@@ -26,7 +26,7 @@ export function BottomNav() {
             <li key={it.to} className="relative">
               {/* Active top indicator */}
               {active && (
-                <span className="absolute top-0 left-0 right-0 h-[3px] bg-accent" />
+                <span className="absolute top-0 left-0 right-0 h-[3px] bg-accent dark:bg-accent-foreground" />
               )}
               <Link
                 to={it.to as any}
@@ -35,14 +35,14 @@ export function BottomNav() {
                 <Icon
                   className={cn(
                     "h-6 w-6 transition-colors duration-200",
-                    active ? "text-accent" : "text-muted-foreground",
+                    active ? "text-accent dark:text-accent-foreground" : "text-muted-foreground",
                   )}
                   strokeWidth={active ? 2.5 : 2}
                 />
                 <span
                   className={cn(
                     "text-[10px] font-medium transition-colors duration-200",
-                    active ? "text-accent" : "text-muted-foreground",
+                    active ? "text-accent dark:text-accent-foreground" : "text-muted-foreground",
                   )}
                 >
                   {it.label}
