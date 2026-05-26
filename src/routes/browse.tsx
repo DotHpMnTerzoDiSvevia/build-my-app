@@ -37,14 +37,16 @@ function BrowsePage() {
   const params = Route.useSearch();
   const navigate = Route.useNavigate();
   const [items, setItems] = useState<ListingCardData[]>([]);
-  const [cats, setCats] = useState<{ id: string; name: string }[]>([]);
+  const [cats, setCats] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from("categories").select("id,name").order("name").then(({ data }) => setCats(data ?? []));
+    supabase.from("categories").select("id,name,slug").order("name").then(({ data }) => setCats(data ?? []));
   }, []);
 
   useEffect(() => {
+    // Wait for categories before filtering by category (so slugs resolve)
+    if (params.category && cats.length === 0) return;
     setLoading(true);
     let q = supabase
       .from("listings")
@@ -52,7 +54,11 @@ function BrowsePage() {
       .in("status", ["active", "sold"]);
 
     if (params.type && params.type !== "all") q = q.eq("type", params.type);
-    if (params.category) q = q.eq("category_id", params.category);
+    if (params.category) {
+      // Accept either a category UUID or a slug
+      const match = cats.find((c) => c.id === params.category || c.slug === params.category);
+      q = q.eq("category_id", match?.id ?? params.category);
+    }
     if (params.condition) q = q.eq("condition", params.condition as never);
     if (params.min != null) q = q.gte("price", params.min);
     if (params.max != null) q = q.lte("price", params.max);
@@ -69,7 +75,7 @@ function BrowsePage() {
       setItems((data ?? []) as ListingCardData[]);
       setLoading(false);
     });
-  }, [params]);
+  }, [params, cats]);
 
   const update = (patch: Partial<SearchParams>) => navigate({ search: { ...params, ...patch } as never });
 
