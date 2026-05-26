@@ -113,7 +113,7 @@ function BrowsePage() {
           <div>
             <Label className="mb-1.5 block text-xs">Category</Label>
             <Select
-              value={params.category ?? "all"}
+              value={(cats.find((c) => c.id === params.category || c.slug === params.category)?.id) ?? "all"}
               onValueChange={(v) => update({ category: v === "all" ? undefined : v })}
             >
               <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
